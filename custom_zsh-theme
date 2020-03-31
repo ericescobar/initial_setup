@@ -1,0 +1,12 @@
+PROMPT='%{$fg[red]%}\
+%n\
+%{$reset_color%}\
+@\
+%{$fg[blue]%}\
+%M\
+%{$reset_color%}\
+:\
+%{$fg[green]%}\
+%d\
+%{$reset_color%}\
+# '
