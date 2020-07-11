@@ -1,9 +1,9 @@
 #!/bin/bash
 #passwd
-echo -n "New Hostname [ENTER]: "
-read host_name
-sudo hostnamectl set-hostname "$host_name" 
-echo "Hostname set"
+#echo -n "New Hostname [ENTER]: "
+#read host_name
+#sudo hostnamectl set-hostname "$host_name" 
+#echo "Hostname set"
 
 #Set TimeZone
 sudo ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
@@ -38,6 +38,7 @@ screen \
 python3 \
 python3-pip \
 vim \
+ntp \
 
 sudo pip3 install \
 netifaces \
@@ -52,6 +53,8 @@ echo "SSH Key Installed"
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
 chsh -s $(which zsh)
 cp custom_zshrc ~/.zshrc
+pwd=$(pwd)
+echo "export ZSH=$pwd/.oh-my-zsh" >> ~/.zshrc
 cp custom_zsh-theme ~/.oh-my-zsh/themes/custom.zsh-theme
 . ~/.zshrc
 echo "ZSH Installed"
