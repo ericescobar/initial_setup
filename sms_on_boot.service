@@ -4,8 +4,8 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-WorkingDirectory=/home/pi/
-ExecStart=/home/pi/SMS_on_boot.py
+WorkingDirectory=/opt/sms_notify/
+ExecStart=/opt/sms_notify/SMS_on_boot.py
 Restart=on-failure
 RestartSec=10
 
