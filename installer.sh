@@ -16,8 +16,8 @@ echo "Timezone set"
 #sudo sed -i '/noupdate/s/^/#/g' /etc/pam.d/sshd
 
 #Set up sms on boot
-mkdir -p /opt/
-mkdir -p /opt/sms_notify
+sudo mkdir -p /opt/
+sudo mkdir -p /opt/sms_notify
 sudo cp SMS_on_boot.py /opt/sms_notify/SMS_on_boot.py
 sudo cp sms_on_boot.service /etc/systemd/system/
 sudo cp sendsms.py /opt/sms_notify/
