@@ -53,8 +53,9 @@ echo "SSH Key Installed"
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
 chsh -s $(which zsh)
 cp custom_zshrc ~/.zshrc
-pwd=$(pwd)
-echo "export ZSH=$pwd/.oh-my-zsh" >> ~/.zshrc
+echo "export ZSH=$HOME/.oh-my-zsh" >> ~/.zshrc
+echo 'DISABLE_AUTO_UPDATE="true"' >> ~/.zshrc
+echo 'source $ZSH/oh-my-zsh.sh' >> ~/.zshrc
 cp custom_zsh-theme ~/.oh-my-zsh/themes/custom.zsh-theme
 . ~/.zshrc
 echo "ZSH Installed"
