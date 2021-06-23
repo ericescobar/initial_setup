@@ -5,7 +5,7 @@ import sys
 import requests
 import subprocess
 import netifaces
-
+time.sleep(5)
 #######################
 #Check Interfaces
 #######################
