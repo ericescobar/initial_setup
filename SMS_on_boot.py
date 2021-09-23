@@ -63,7 +63,7 @@ try:
 	print(message)
 	sendsms.sms(message)
 except ValueError as e:
-        print("Error message not sent.")
+	print("Error message not sent.")
 	print(e)
 	time.sleep(3)
 	sys.exit(1)
