@@ -1,0 +1,7 @@
+defscrollback 10000
+logfile $HOME/logs/screen-%S-%Y%m%d.log
+deflog on
+hardstatus on
+hardstatus alwayslastline
+hardstatus string "%{.kW}%-w%{.bW}%t [%n]%{-}%+w %=%{..M} %S %=%{..G} %H %{..Y} %Y/%m/%d %c"
+defscrollback 100000
