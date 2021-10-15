@@ -1,8 +1,9 @@
-PROMPT='%{$fg[red]%}\
+PROMPT='%{$fg[white]%}[%{$fg[yellow]%}%D %T%{$fg[white]%}]%{$reset_color%} \
+%{$fg[red]%}\
 %n\
 %{$reset_color%}\
 @\
-%{$fg[blue]%}\
+%{$fg[cyan]%}\
 %M\
 %{$reset_color%}\
 :\
