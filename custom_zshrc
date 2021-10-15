@@ -98,3 +98,6 @@ plugins=(git)
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias history="history -i"
+alias ls="ls -lah"
+alias clip="xclip -sel clip" 
