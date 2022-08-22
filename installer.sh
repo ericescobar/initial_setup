@@ -62,3 +62,4 @@ twilio
 #. ~/.zshrc
 #echo "ZSH Installed"
 #cp screenrc ~/.screenrc
+#mkdir ~/logs
