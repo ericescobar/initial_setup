@@ -51,7 +51,9 @@ twilio
 #chmod 644 ~/.ssh/authorized_keys
 #echo "SSH Key Installed"
 #sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
-#chsh -s $(which zsh)
+#chsh -s $(which zsh) OLD OLD
+#Below doesn't require the users password 
+#sudo chsh $USER -s $(which zsh)
 #cp custom_zshrc ~/.zshrc
 #echo "export ZSH=$HOME/.oh-my-zsh" >> ~/.zshrc
 #echo 'DISABLE_AUTO_UPDATE="true"' >> ~/.zshrc
@@ -59,4 +61,4 @@ twilio
 #cp custom_zsh-theme ~/.oh-my-zsh/themes/custom.zsh-theme
 #. ~/.zshrc
 #echo "ZSH Installed"
-#alias history="history -i"
+#cp screenrc ~/.screenrc
