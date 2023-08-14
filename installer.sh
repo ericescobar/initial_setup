@@ -51,6 +51,17 @@ function setup_zsh() {
   mkdir ~/logs
 }
 
+# Help menu
+function display_help() {
+  echo "Usage: $0 [OPTIONS]"
+  echo "Options:"
+  echo "  update  : Update packages"
+  echo "  tools   : Install tools (git, vim, curl)"
+  echo "  zsh     : Setup zsh"
+  echo "  all     : Run all of the above"
+}
+
+
 # Check command line arguments and execute accordingly
 for arg in "$@"; do
   case $arg in
@@ -75,6 +86,10 @@ for arg in "$@"; do
       setup_zsh
       update_timezone
       update_hostname
+      ;;
+    help|--help|-h)
+      display_help
+      exit 0
       ;;
     *)
       echo "Invalid option: $arg"
