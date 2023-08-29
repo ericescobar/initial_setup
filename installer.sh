@@ -6,13 +6,15 @@ function update_hostname() {
   read host_name
   sudo hostnamectl set-hostname "$host_name"
   echo "Hostname set"
+  exit 0
 }
 
 # Set TZ PST
 function update_timezone() {
-  #Set TimeZone
+  # Set TimeZone
   sudo ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
   echo "Timezone set"
+  exit 0
 }
 
 # Install some tools
@@ -21,9 +23,11 @@ function install_tools() {
   sudo apt-get upgrade -y
   sudo apt-get install -y git vim curl zsh nmap rsync git screen python3 python3-pip ntp
   sudo pip3 install netifaces requests cheat twilio
+  echo "Tools installed"
+  exit 0
 }
 
-# Install some tools
+# Install Twilio
 function install_twilio() {
   sudo mkdir -p /opt/
   sudo mkdir -p /opt/sms_notify
@@ -34,13 +38,14 @@ function install_twilio() {
   sudo systemctl enable sms_on_boot.service
   sudo systemctl start sms_on_boot.service
   echo "SMS Notify Enabled"
+  exit 0
 }
 
 # Setup zsh and screen logging
 function setup_zsh() {
   sudo apt-get install -y zsh
   sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
-  chsh -s $(which zsh)
+  sudo chsh $USER -s $(which zsh)
   cp custom_zshrc ~/.zshrc
   echo "export ZSH=$HOME/.oh-my-zsh" >> ~/.zshrc
   echo 'DISABLE_AUTO_UPDATE="true"' >> ~/.zshrc
@@ -49,18 +54,28 @@ function setup_zsh() {
   . ~/.zshrc
   cp screenrc ~/.screenrc
   mkdir ~/logs
+  echo "ZSH setup complete"
+  exit 0
 }
 
 # Help menu
 function display_help() {
   echo "Usage: $0 [OPTIONS]"
   echo "Options:"
-  echo "  update  : Update packages"
-  echo "  tools   : Install tools (git, vim, curl)"
-  echo "  zsh     : Setup zsh"
-  echo "  all     : Run all of the above"
+  echo "  update    : Update packages (Deprecated)"
+  echo "  tools     : Install tools (git, vim, curl, etc.)"
+  echo "  zsh       : Setup zsh"
+  echo "  timezone  : Update timezone"
+  echo "  hostname  : Update hostname"
+  echo "  twilio    : Install and configure Twilio for SMS notifications"
+  echo "  all       : Run all of the above"
+  exit 0
 }
 
+# Check if no arguments were provided and display help if true
+if [ $# -eq 0 ]; then
+  display_help
+fi
 
 # Check command line arguments and execute accordingly
 for arg in "$@"; do
@@ -86,14 +101,14 @@ for arg in "$@"; do
       setup_zsh
       update_timezone
       update_hostname
+      exit 0
       ;;
     help|--help|-h)
       display_help
-      exit 0
       ;;
     *)
       echo "Invalid option: $arg"
-      echo "Available options: update, tools, zsh, timezone, twilio, hostname, all"
+      echo "Available options: update (Deprecated), tools, zsh, timezone, twilio, hostname, all"
       exit 1
       ;;
   esac
