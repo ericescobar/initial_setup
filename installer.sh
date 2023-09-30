@@ -29,6 +29,8 @@ function install_tools() {
 
 # Install Twilio
 function install_twilio() {
+  sudo apt-get install -y git python3 python3-pip
+  sudo pip3 install netifaces requests twilio
   sudo mkdir -p /opt/
   sudo mkdir -p /opt/sms_notify
   sudo cp SMS_on_boot.py /opt/sms_notify/SMS_on_boot.py
