@@ -29,6 +29,7 @@ function install_tools() {
 
 # Install Twilio
 function install_twilio() {
+  sudo apt-get update
   sudo apt-get install -y git python3 python3-pip
   sudo pip3 install netifaces requests twilio
   sudo mkdir -p /opt/
