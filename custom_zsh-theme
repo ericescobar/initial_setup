@@ -4,7 +4,7 @@ PROMPT='%{$fg[white]%}[%{$fg[yellow]%}%D %T%{$fg[white]%}]%{$reset_color%} \
 %{$reset_color%}\
 @\
 %{$fg[cyan]%}\
-%M\
+${HOST/.*/}\
 %{$reset_color%}\
 :\
 %{$fg[green]%}\
