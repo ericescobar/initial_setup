@@ -5,7 +5,9 @@ import datetime
 import re
 def sms(sms_body):
 	#Reading from config.txt
-	f = open('config.txt','r')
+	import os
+	config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.txt')
+	f = open(config_path,'r')
 	lines = f.read().splitlines()
 	DeviceID = re.findall(r'"([^"]*)"', lines[0])[0]
 	twilio_account = re.findall(r'"([^"]*)"', lines[2])[0]
@@ -32,4 +34,3 @@ def sms(sms_body):
                		from_=twilio_from,
                		body=sms_message,
        			)
-
