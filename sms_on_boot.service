@@ -2,12 +2,19 @@
 Description=SMS Twilio Stats on Boot
 Wants=network-online.target
 After=network-online.target
+RequiresMountsFor=/opt/sms_notify
 
 [Service]
+Type=simple
 WorkingDirectory=/opt/sms_notify/
-ExecStart=/opt/sms_notify/SMS_on_boot.py
+ExecStart=/opt/sms_notify/venv/bin/python /opt/sms_notify/SMS_on_boot.py
 Restart=on-failure
-RestartSec=10
+RestartSec=30
+StartLimitInterval=600
+StartLimitBurst=5
+StandardOutput=journal
+StandardError=journal
+Environment="PATH=/opt/sms_notify/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 [Install]
 WantedBy=multi-user.target
