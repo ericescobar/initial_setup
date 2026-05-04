@@ -35,7 +35,7 @@ function install_tools() {
 # Install Twilio
 function install_twilio() {
   sudo apt-get update
-  sudo apt-get install -y git python3 python3-pip python3-venv
+  sudo apt-get install -y git python3 python3-pip python3-venv python3-dev build-essential
   
   # Create directory structure
   sudo mkdir -p /opt/sms_notify
