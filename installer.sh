@@ -6,7 +6,7 @@ function update_hostname() {
   read host_name
   sudo hostnamectl set-hostname "$host_name"
   echo "Hostname set"
-  exit 0
+  return 0
 }
 
 # Set TZ PST
@@ -14,7 +14,7 @@ function update_timezone() {
   # Set TimeZone
   sudo ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
   echo "Timezone set"
-  exit 0
+  return 0
 }
 
 # Install some tools
@@ -29,11 +29,25 @@ function install_tools() {
   pipx install cheat
   echo "Tools installed"
   echo "Note: Python packages like netifaces, requests, twilio should be installed in virtual environments"
-  exit 0
+  return 0
 }
 
 # Install Twilio
 function install_twilio() {
+  # Make sure config.txt is filled in before doing anything - an empty config
+  # installs fine but every SMS would fail at runtime (no creds / numbers).
+  SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+  if [ ! -f "$SCRIPT_DIR/config.txt" ] || ! grep -q '[^[:space:]]' "$SCRIPT_DIR/config.txt"; then
+    echo "Error: $SCRIPT_DIR/config.txt is empty or missing."
+    echo "Fill it in before running 'twilio'. Expected format (one quoted value per line):"
+    echo '  "DeviceID"'
+    echo '  "+15551234567,+15557654321"'
+    echo '  "TwilioAccountSID"'
+    echo '  "TwilioAuthToken"'
+    echo '  "+15550001111"'
+    return 1
+  fi
+
   sudo apt-get update
   sudo apt-get install -y git python3 python3-pip python3-venv python3-dev build-essential
   
@@ -62,7 +76,41 @@ function install_twilio() {
   sudo systemctl enable sms_on_boot.service
   sudo systemctl start sms_on_boot.service
   echo "SMS Notify Enabled"
-  exit 0
+  return 0
+}
+
+# Install time fixer (HTTP bootstrap + NTP sync, on boot and every 3 hours)
+function install_time_fixer() {
+  sudo apt-get update
+  # ntpsec       : the NTP daemon for continuous time keeping
+  # ntpsec-ntpdate: the one-shot ntpdate client used by time_fixer.sh
+  sudo apt-get install -y ntpsec ntpsec-ntpdate curl
+
+  # Enable the NTP daemon so time stays disciplined between fixer runs.
+  # Service name is "ntpsec" on modern Debian, "ntp" on older releases.
+  sudo systemctl enable --now ntpsec 2>/dev/null \
+    || sudo systemctl enable --now ntp 2>/dev/null \
+    || echo "Warning: could not enable an NTP daemon (ntpsec/ntp)"
+
+  # Create directory structure
+  sudo mkdir -p /opt/time_fixer
+
+  # Copy files (using script directory as base)
+  SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+  sudo cp "$SCRIPT_DIR/time_fixer.sh" /opt/time_fixer/time_fixer.sh
+  sudo cp "$SCRIPT_DIR/time_fixer.service" /etc/systemd/system/
+  sudo cp "$SCRIPT_DIR/time_fixer.timer" /etc/systemd/system/
+
+  # Set permissions
+  sudo chmod +x /opt/time_fixer/time_fixer.sh
+
+  # Enable timer (boot + every 3 hours) and fix the clock once right now
+  sudo systemctl daemon-reload
+  sudo systemctl enable time_fixer.timer
+  sudo systemctl start time_fixer.timer
+  sudo systemctl start time_fixer.service
+  echo "Time fixer installed (runs on boot and every 3 hours)"
+  return 0
 }
 
 # Add current user to sudoers with NOPASSWD
@@ -86,7 +134,7 @@ function setup_sudoers() {
     sudo rm "$sudoers_file"
     exit 1
   fi
-  exit 0
+  return 0
 }
 
 # Setup zsh and screen logging
@@ -103,7 +151,7 @@ function setup_zsh() {
   cp screenrc ~/.screenrc
   mkdir ~/logs
   echo "ZSH setup complete"
-  exit 0
+  return 0
 }
 
 # Help menu
@@ -116,9 +164,10 @@ function display_help() {
   echo "  timezone  : Update timezone"
   echo "  hostname  : Update hostname"
   echo "  twilio    : Install and configure Twilio for SMS notifications"
+  echo "  time_fixer: Fix clock via HTTP then NTP on boot and every 3 hours"
   echo "  sudoers   : Add current user to sudoers with NOPASSWD"
   echo "  all       : Run all of the above"
-  exit 0
+  return 0
 }
 
 # Check if no arguments were provided and display help if true
@@ -138,6 +187,9 @@ for arg in "$@"; do
     twilio)
       install_twilio
       ;;
+    time_fixer)
+      install_time_fixer
+      ;;
     tools)
       install_tools
       ;;
@@ -149,6 +201,7 @@ for arg in "$@"; do
       ;;
     all)
       install_tools
+      install_time_fixer
       install_twilio
       setup_zsh
       setup_sudoers
@@ -161,7 +214,7 @@ for arg in "$@"; do
       ;;
     *)
       echo "Invalid option: $arg"
-      echo "Available options: update (Deprecated), tools, zsh, timezone, twilio, hostname, sudoers, all"
+      echo "Available options: update (Deprecated), tools, zsh, timezone, twilio, time_fixer, hostname, sudoers, all"
       exit 1
       ;;
   esac

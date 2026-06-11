@@ -19,7 +19,7 @@ def sms(sms_body):
 
 	#Checking & formatting time
 	timedate = datetime.datetime.now()
-	tdate = timedate.strftime('%I:%M%p')
+	tdate = timedate.strftime('%Y/%m/%d %I:%M%p %Z')
 
 	#Format Message header you want to send
 	sms_message = '%s: %s \n%s' % (DeviceID,tdate,sms_body)

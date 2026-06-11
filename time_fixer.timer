@@ -1,0 +1,12 @@
+[Unit]
+Description=Run time_fixer on boot and every 3 hours
+
+[Timer]
+# Run shortly after boot (once the network is up) ...
+OnBootSec=1min
+# ... and then every 3 hours thereafter.
+OnUnitActiveSec=3h
+Unit=time_fixer.service
+
+[Install]
+WantedBy=timers.target
