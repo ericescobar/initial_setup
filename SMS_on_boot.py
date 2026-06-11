@@ -74,9 +74,7 @@ def get_last_ssh_login():
         if len(parts) >= 4 and parts[1].startswith('pts/'):
             ip = parts[2]
             if ip and ip not in ('0.0.0.0', ':0'):
-                user = parts[0]
-                when = ' '.join(parts[3:7])  # weekday month day HH:MM
-                return '%s from %s (%s)' % (user, ip, when.strip())
+                return parts[0]  # username only
     return 'none recorded'
 
 ######################
