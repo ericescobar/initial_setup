@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-#ERICS EDIT: the line below is now appended to the bottom as a part of the config
+# NOTE: the line below is appended to the bottom of this file by installer.sh
 #export ZSH="/home/pi/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will

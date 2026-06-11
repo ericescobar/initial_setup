@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Local Twilio config - copy from config.txt.sample and fill in.
+# Never commit real credentials / phone numbers.
+config.txt

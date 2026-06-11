@@ -39,7 +39,9 @@ function install_twilio() {
   SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
   if [ ! -f "$SCRIPT_DIR/config.txt" ] || ! grep -q '[^[:space:]]' "$SCRIPT_DIR/config.txt"; then
     echo "Error: $SCRIPT_DIR/config.txt is empty or missing."
-    echo "Fill it in before running 'twilio'. Expected format (one quoted value per line):"
+    echo "Create it from the template, then fill in your values:"
+    echo "  cp $SCRIPT_DIR/config.txt.sample $SCRIPT_DIR/config.txt"
+    echo "Expected format (one quoted value per line, no blank or comment lines):"
     echo '  "DeviceID"'
     echo '  "+15551234567,+15557654321"'
     echo '  "TwilioAccountSID"'
