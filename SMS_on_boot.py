@@ -144,7 +144,8 @@ def main():
         host_dt = time.strftime('%Y/%m/%d %I:%M%p %Z')
         last_ssh = get_last_ssh_login()
 
-        message = 'Host time: %s' % (host_dt)
+        message = 'Hostname: %s' % (socket.gethostname())
+        message += '\nHost time: %s' % (host_dt)
         message += '\nLast SSH: %s' % (last_ssh)
         message += '\nPublic IP: %s' % (publicIP)
         i = 0

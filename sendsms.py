@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 #Importing stuff
-import datetime
 import re
 def sms(sms_body):
 	#Reading from config.txt
@@ -17,12 +16,8 @@ def sms(sms_body):
 	phoneNumbers = phoneNumbers.split(",")
 	f.close()
 
-	#Checking & formatting time
-	timedate = datetime.datetime.now()
-	tdate = timedate.strftime('%Y/%m/%d %I:%M%p %Z')
-
-	#Format Message header you want to send
-	sms_message = '%s: %s \n%s' % (DeviceID,tdate,sms_body)
+	#Format Message header you want to send (date/time is provided by the caller)
+	sms_message = '%s\n%s' % (DeviceID,sms_body)
 
 
 	#Sending sms to every number in config.txt
