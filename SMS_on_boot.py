@@ -45,6 +45,40 @@ def CheckInterfaces():
                 address_list.append('None')
     return address_list, interface_list
 
+#######################
+# Last successful SSH login
+#######################
+def get_last_ssh_login():
+    """Return the most recent successful SSH login (user / IP / time), or a fallback.
+
+    Reads the login history via `last -i` (IP shown numerically). SSH sessions
+    use a pts/ tty and carry a real remote IP, which distinguishes them from
+    local/console logins (which show 0.0.0.0). Requires read access to wtmp,
+    which is fine because this service runs as root.
+    """
+    try:
+        out = subprocess.check_output(
+            ['last', '-i', '-w', '-n', '50'],
+            stderr=subprocess.DEVNULL
+        ).decode('utf-8', 'replace')
+    except Exception:
+        return 'unavailable'
+
+    for line in out.splitlines():
+        parts = line.split()
+        # Skip blank lines, the trailing "wtmp begins ..." footer, and
+        # reboot/shutdown/runlevel pseudo-users.
+        if not parts or parts[0] in ('reboot', 'shutdown', 'runlevel', 'wtmp'):
+            continue
+        # SSH = pts/ tty with a real remote IP (local logins show 0.0.0.0).
+        if len(parts) >= 4 and parts[1].startswith('pts/'):
+            ip = parts[2]
+            if ip and ip not in ('0.0.0.0', ':0'):
+                user = parts[0]
+                when = ' '.join(parts[3:7])  # weekday month day HH:MM
+                return '%s from %s (%s)' % (user, ip, when.strip())
+    return 'none recorded'
+
 ######################
 # Check Public IP
 ######################
@@ -106,8 +140,13 @@ def main():
     try:
         publicIP = CheckPublicIP()
         address_list, interface_list = CheckInterfaces()
-        
-        message = 'Public IP: %s' % (publicIP)
+
+        host_dt = time.strftime('%Y/%m/%d %I:%M%p %Z')
+        last_ssh = get_last_ssh_login()
+
+        message = 'Host time: %s' % (host_dt)
+        message += '\nLast SSH: %s' % (last_ssh)
+        message += '\nPublic IP: %s' % (publicIP)
         i = 0
         total_interfaces = len(interface_list)
         while i < total_interfaces:
