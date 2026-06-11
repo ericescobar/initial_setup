@@ -7,6 +7,11 @@ import subprocess
 import netifaces
 import socket
 
+# Seconds to wait after the base network is up before gathering IPs and sending.
+# This gives slower-to-establish interfaces (e.g. a VPN like tun0/tailscale0)
+# time to come up so their addresses are included in the SMS. Tune as needed.
+BOOT_DELAY_SECONDS = 60
+
 #######################
 # Network connectivity check
 #######################
@@ -92,9 +97,11 @@ def main():
         sys.exit(1)
     
     print("Network is up, gathering information...")
-    
-    # Small delay to ensure all interfaces are fully up
-    time.sleep(2)
+
+    # Delay to let slower interfaces (e.g. a VPN) finish coming up before we
+    # read addresses, so their IPs are captured in the SMS.
+    print(f"Waiting {BOOT_DELAY_SECONDS}s for any VPN/late interfaces to come up...")
+    time.sleep(BOOT_DELAY_SECONDS)
     
     try:
         publicIP = CheckPublicIP()
